@@ -1,8 +1,8 @@
 import BriefingCard from "@/components/BriefingCard";
-import { getLatestBriefings } from "@/lib/intelligence";
+import { getLiveBriefings } from "@/lib/intelligence";
 
-export default function Home() {
-  const briefings = getLatestBriefings();
+export default async function Home() {
+  const briefings = await getLiveBriefings();
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
@@ -15,8 +15,15 @@ export default function Home() {
       </p>
 
       <section className="mt-12" aria-label="Live intelligence feed">
-        <h2 className="mb-6 font-serif text-2xl font-medium tracking-tight text-slate-clean sm:text-3xl">
+        <h2 className="mb-6 flex items-center gap-2 font-serif text-2xl font-medium tracking-tight text-slate-clean sm:text-3xl">
           Live Intelligence Feed
+          <span className="flex items-center gap-1.5 text-sm font-sans font-medium uppercase tracking-widest text-red-500">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+            </span>
+            LIVE
+          </span>
         </h2>
         <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {briefings.map((briefing) => (

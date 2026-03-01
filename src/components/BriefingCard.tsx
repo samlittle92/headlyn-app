@@ -1,4 +1,4 @@
-import type { Briefing } from "@/types/intell";
+import type { Briefing } from "@/types/intelligence";
 
 function ListenIcon({ className }: { className?: string }) {
   return (
