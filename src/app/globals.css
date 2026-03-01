@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Headlyn Brand Palette */
+  --color-carbon-black: #121212;
+  --color-signal-cobalt: #2E5BFF;
+  --color-amber-glow: #FFB800;
+  --color-slate-clean: #F0F0F0;
+
+  /* Typography: Geist for UI/body, Fraunces for editorial headlines */
+  --font-sans: var(--font-geist-sans), "Inter", system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), "Georgia", serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--color-carbon-black);
+    color: var(--color-slate-clean);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Premium editorial headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  /* Industry Standard: Remove default focus rings for a cleaner look,
+     but replace with our brand cobalt for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-signal-cobalt);
+    outline-offset: 2px;
+  }
 }
