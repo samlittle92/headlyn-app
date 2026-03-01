@@ -1,3 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  /* Headlyn Brand Palette */
+  --color-carbon-black: #121212;
+  --color-signal-cobalt: #2E5BFF;
+  --color-amber-glow: #FFB800;
+  --color-slate-clean: #F0F0F0;
+
+  /* Typography */
+  --font-sans: "Inter", "SF Pro Display", "sans-serif";
+}
+
 {
   "compilerOptions": {
     "target": "ES2017",
