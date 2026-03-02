@@ -78,7 +78,7 @@ export async function getLiveBriefings(): Promise<Briefing[]> {
     return raw.map((b) => ({
       ...b,
       source: (b.source as string) ?? "Reka Research",
-      isVoiceReady: typeof b.isVoiceReady === "boolean" ? b.isVoiceReady : false,
+      isVoiceReady: true, // we always have title + summary for TTS
     })) as Briefing[];
 
   } catch (error) {

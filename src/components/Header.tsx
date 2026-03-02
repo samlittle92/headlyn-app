@@ -44,36 +44,38 @@ export default function Header() {
           >
             Headlyn
           </Link>
-          
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main Intelligence Navigation">
-            <Link
-              href="/"
-              className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
-            >
-              Headlyns
-            </Link>
-            <Link
-              href="/analysis"
-              className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
-            >
-              Analysis
-            </Link>
-            <Link
-              href="/settings"
-              className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
-            >
-              Settings
-            </Link>
-            
-            <SignedIn>
-              <Link
-                href="/preferences"
-                className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
-              >
-                Your Interests
-              </Link>
-            </SignedIn>
-          </nav>
+  <Link
+    href="/"
+    className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
+  >
+    Headlyns
+  </Link>
+  
+  <Link
+    href="/analysis"
+    className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
+  >
+    Analysis
+  </Link>
+
+  {/* IMPORTANT: Ensure this matches your [[...rest]] folder structure */}
+  <Link
+    href="/settings"
+    className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
+  >
+    Settings
+  </Link>
+  
+  <SignedIn>
+    <Link
+      href="/preferences"
+      className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
+    >
+      Your Interests
+    </Link>
+  </SignedIn>
+</nav>
         </div>
 
         {/* Right Section: Actions & Auth */}

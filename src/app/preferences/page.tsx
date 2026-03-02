@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { saveUserPreferences } from "@/app/actions/preferences";
 
 const INTELLIGENCE_TARGETS = [
@@ -22,6 +22,7 @@ const INTELLIGENCE_TARGETS = [
 
 export default function PreferencesPage() {
   const router = useRouter();
+  const { getToken } = useAuth();
   const { user, isLoaded } = useUser();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,6 +48,7 @@ export default function PreferencesPage() {
     try {
       await saveUserPreferences(Array.from(selected));
       await user.reload();
+      await getToken({ skipCache: true });
       setSaved(true);
       router.push("/");
       router.refresh();

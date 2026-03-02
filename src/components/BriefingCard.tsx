@@ -1,3 +1,7 @@
+"use client";
+
+import { useState, useCallback } from "react";
+import { Loader2 } from "lucide-react";
 import type { Briefing } from "@/types/intelligence";
 
 function ListenIcon({ className }: { className?: string }) {
@@ -27,7 +31,57 @@ export interface BriefingCardProps {
 }
 
 export default function BriefingCard({ briefing }: BriefingCardProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
   const isVerified = briefing.verificationScore > 90;
+
+  const handlePlayAudio = useCallback(async () => {
+    if (isPlaying) return;
+    const text = `${briefing.title}. ${briefing.summary}`.trim();
+    if (!text) return;
+
+    setIsPlaying(true);
+    try {
+      const res = await fetch("/api/audio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        console.error("Audio fetch failed:", data.error ?? res.statusText);
+        setIsPlaying(false);
+        return;
+      }
+
+      const blob = await res.blob();
+      if (blob.size === 0) {
+        console.error("Audio response was empty");
+        setIsPlaying(false);
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        setIsPlaying(false);
+      };
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        setIsPlaying(false);
+      };
+
+      await audio.play().catch((e) => {
+        console.error("Play failed:", e);
+        URL.revokeObjectURL(url);
+        setIsPlaying(false);
+      });
+    } catch (e) {
+      console.error("Play failed:", e);
+      setIsPlaying(false);
+    }
+  }, [briefing.title, briefing.summary, isPlaying]);
 
   return (
     <article
@@ -68,11 +122,16 @@ export default function BriefingCard({ briefing }: BriefingCardProps) {
         </div>
         <button
           type="button"
-          className="flex shrink-0 items-center justify-center rounded-sm p-2 text-slate-clean/70 transition-colors hover:bg-white/10 hover:text-slate-clean focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-black"
-          aria-label="Listen"
-          disabled={!briefing.isVoiceReady}
+          onClick={handlePlayAudio}
+          disabled={isPlaying}
+          className="flex shrink-0 items-center justify-center rounded-sm p-2 text-slate-clean/70 transition-colors hover:bg-white/10 hover:text-slate-clean focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-black disabled:opacity-50 disabled:hover:bg-transparent"
+          aria-label={isPlaying ? "Generating audio" : "Listen"}
         >
-          <ListenIcon className="size-5" />
+          {isPlaying ? (
+            <Loader2 className="size-5 animate-spin" />
+          ) : (
+            <ListenIcon className="size-5" />
+          )}
         </button>
       </div>
     </article>

@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// 1. Define which routes DON'T trigger the "No Interests" check
+/** Routes exempt from "no interests" redirect (logged-in user without publicMetadata.interests) */
 const isOnboardingExempt = createRouteMatcher([
   "/preferences(.*)",
   "/analysis(.*)",
@@ -9,25 +9,28 @@ const isOnboardingExempt = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/(.*)",
+  "/proxy(.*)", // Add your proxy route here to prevent redirect loops
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId, sessionClaims } = await auth();
+  const isHomePage = req.nextUrl.pathname === "/";
 
-  // 2. If the user is logged in...
   if (userId) {
-    // 3. ...and they are trying to access a page that REQUIRES interests (like the Home Page)
-    if (!isOnboardingExempt(req)) {
-      const interests = (sessionClaims?.metadata as any)?.interests;
-      const hasInterests = Array.isArray(interests) && interests.length > 0;
+    // If they are on the Home page, let the request through so the cards can render
+    if (isHomePage) {
+      return NextResponse.next();
+    }
 
-      // 4. If they have no interests, send them to the picker
+    if (!isOnboardingExempt(req)) {
+      const interests = (sessionClaims?.metadata as { interests?: unknown })?.interests;
+      const hasInterests = Array.isArray(interests) && interests.length > 0;
+      
       if (!hasInterests) {
         return NextResponse.redirect(new URL("/preferences", req.url));
       }
     }
   } else {
-    // 5. If NOT logged in, protect everything except the sign-in/up pages
     if (!isOnboardingExempt(req)) {
       return (await auth()).redirectToSignIn();
     }

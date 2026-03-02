@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import { UserProfile } from "@clerk/nextjs";
 
@@ -19,6 +20,8 @@ export default function SettingsPage() {
 
         <div className="[&_.clerk-userProfile]:rounded-sm">
           <UserProfile
+            routing="path"
+            path="/settings"
             appearance={{
               variables: {
                 colorBackground: "#000000",
