@@ -1,4 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 export default function Header() {
   return (
@@ -33,12 +41,32 @@ export default function Header() {
             </Link>
           </nav>
         </div>
-        <Link
-          href="#"
-          className="rounded-sm bg-signal-cobalt px-4 py-2.5 text-[13px] font-semibold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
-        >
-          BRIEF NOW
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="#"
+            className="rounded-sm bg-signal-cobalt px-4 py-2.5 text-[13px] font-semibold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+          >
+            BRIEF NOW
+          </Link>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button
+                type="button"
+                className="text-[13px] font-medium uppercase tracking-widest text-slate-clean/90 transition-colors hover:text-slate-clean"
+              >
+                Sign in
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton
+              afterSignOutUrl="/"
+              appearance={{
+                variables: { colorBackground: "rgb(18 18 18)", colorText: "rgb(240 240 240)" },
+              }}
+            />
+          </SignedIn>
+        </div>
       </div>
     </header>
   );

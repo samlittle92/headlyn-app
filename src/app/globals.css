@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Clerk component styles (Tailwind v4: lower specificity so our theme wins where needed) */
+@layer clerk {
+  /* Clerk modals and buttons can be overridden here if needed */
+}
+
 @theme {
   /* Headlyn Brand Palette */
   --color-carbon-black: #121212;
