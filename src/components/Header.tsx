@@ -7,65 +7,123 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import { useState } from "react";
+import { Play, Loader2 } from "lucide-react";
+import { triggerAudioBriefing } from "@/app/actions/audio";
 
 export default function Header() {
+  const [isBriefing, setIsBriefing] = useState(false);
+
+  const handleBriefNow = async () => {
+    setIsBriefing(true);
+    try {
+      const result = await triggerAudioBriefing();
+      if (result.success) {
+        const audio = new Audio(result.dataUri);
+        await audio.play();
+      } else {
+        console.error("Audio briefing:", result.error);
+      }
+    } catch (e) {
+      console.error("Audio briefing failed:", e);
+    } finally {
+      setIsBriefing(false);
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-10 border-b border-white/10 bg-carbon-black/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <div className="flex items-center gap-10">
+        
+        {/* Left Section: Logo & Main Nav */}
+        <div className="flex items-center gap-12">
           <Link
             href="/"
-            className="font-serif text-xl font-medium tracking-tight text-slate-clean transition-opacity hover:opacity-90"
+            className="font-serif text-2xl font-medium tracking-tighter text-white transition-opacity hover:opacity-90"
             aria-label="Headlyn home"
           >
             Headlyn
           </Link>
-          <nav className="flex items-center gap-8" aria-label="Main">
+          
+          <nav className="hidden items-center gap-8 md:flex" aria-label="Main Intelligence Navigation">
             <Link
-              href="/briefings"
-              className="text-[13px] font-medium uppercase tracking-[0.12em] text-slate-clean/90 transition-colors hover:text-slate-clean"
+              href="/"
+              className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
             >
-              BRIEFINGS
+              Headlyns
             </Link>
             <Link
               href="/analysis"
-              className="text-[13px] font-medium uppercase tracking-[0.12em] text-slate-clean/90 transition-colors hover:text-slate-clean"
+              className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
             >
-              ANALYSIS
+              Analysis
             </Link>
             <Link
               href="/settings"
-              className="text-[13px] font-medium uppercase tracking-[0.12em] text-slate-clean/90 transition-colors hover:text-slate-clean"
+              className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
             >
-              SETTINGS
+              Settings
             </Link>
+            
+            <SignedIn>
+              <Link
+                href="/preferences"
+                className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 transition-colors hover:text-signal-cobalt"
+              >
+                Your Interests
+              </Link>
+            </SignedIn>
           </nav>
         </div>
-        <div className="flex items-center gap-3">
-          <Link
-            href="#"
-            className="rounded-sm bg-signal-cobalt px-4 py-2.5 text-[13px] font-semibold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
-          >
-            BRIEF NOW
-          </Link>
+
+        {/* Right Section: Actions & Auth */}
+        <div className="flex items-center gap-6">
+          
+          <SignedIn>
+            <button
+              onClick={handleBriefNow}
+              disabled={isBriefing}
+              className="group flex items-center gap-2 rounded-sm bg-signal-cobalt px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-white transition-all hover:bg-signal-cobalt/90 active:scale-95 disabled:opacity-50"
+            >
+              {isBriefing ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <Play className="h-3 w-3 fill-current" />
+              )}
+              {isBriefing ? "Generating..." : "Brief Now"}
+            </button>
+          </SignedIn>
+
           <SignedOut>
             <SignInButton mode="modal">
               <button
                 type="button"
-                className="text-[13px] font-medium uppercase tracking-widest text-slate-clean/90 transition-colors hover:text-slate-clean"
+                className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-white"
               >
-                Sign in
+                Identify
               </button>
             </SignInButton>
           </SignedOut>
+
           <SignedIn>
-            <UserButton
-              afterSignOutUrl="/"
-              appearance={{
-                variables: { colorBackground: "rgb(18 18 18)", colorText: "rgb(240 240 240)" },
-              }}
-            />
+            <div className="flex items-center gap-3 border-l border-white/10 pl-6">
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  variables: { 
+                    colorBackground: "#000000", 
+                    colorText: "#FFFFFF",
+                    colorPrimary: "#2D52FF",
+                    borderRadius: "2px"
+                  },
+                  elements: {
+                    userButtonAvatarBox: "h-8 w-8 border border-white/10"
+                  }
+                }}
+              />
+            </div>
           </SignedIn>
+          
         </div>
       </div>
     </header>
