@@ -32,7 +32,7 @@ export default async function Home() {
 
       <div className="mt-8">
         <Link
-          href="/preferences/me"
+          href="/preferences"
           className="inline-flex items-center gap-2 rounded-sm border border-signal-cobalt/40 bg-signal-cobalt/10 px-4 py-2 font-sans text-sm font-medium text-signal-cobalt transition-colors hover:bg-signal-cobalt/20 hover:shadow-[0_0_20px_rgba(45,82,255,0.15)]"
         >
           View your interests

@@ -33,9 +33,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable}`}>
-        <body className="antialiased font-sans">
+        <body className="min-h-screen bg-black text-white antialiased font-sans">
           <Header />
-          {children}
+          <main className="flex-1">{children}</main>
         </body>
       </html>
     </ClerkProvider>

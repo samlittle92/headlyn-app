@@ -2,7 +2,7 @@
 
 import { getLiveBriefings } from "@/lib/intelligence";
 
-const ELEVENLABS_VOICE_ID = "pNInz6ovfS8qiS2mGcl7";
+const ELEVENLABS_VOICE_ID = '21m00Tcm4TlvDq8ikWAM';
 const ELEVENLABS_STREAM_URL = `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}/stream`;
 
 export type AudioResult = { success: true; dataUri: string } | { success: false; error: string };

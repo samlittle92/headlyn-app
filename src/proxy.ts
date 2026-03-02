@@ -4,9 +4,11 @@ import { NextResponse } from "next/server";
 // 1. Define which routes DON'T trigger the "No Interests" check
 const isOnboardingExempt = createRouteMatcher([
   "/preferences(.*)",
+  "/analysis(.*)",
+  "/settings(.*)",
   "/sign-in(.*)",
   "/sign-up(.*)",
-  "/api/(.*)" // Don't block background API calls
+  "/api/(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
